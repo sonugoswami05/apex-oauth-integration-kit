@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Generation_Request__c</fullName>
+    <description>Request this snapshot belongs to.</description>
+    <externalId>false</externalId>
+    <label>Generation Request</label>
+    <referenceTo>Generation_Request__c</referenceTo>
+    <relationshipLabel>Payload Snapshots</relationshipLabel>
+    <relationshipName>Payload_Snapshots</relationshipName>
+    <relationshipOrder>0</relationshipOrder>
+    <reparentableMasterDetail>false</reparentableMasterDetail>
+    <trackTrending>false</trackTrending>
+    <type>MasterDetail</type>
+    <writeRequiresMasterRead>false</writeRequiresMasterRead>
+</CustomField>

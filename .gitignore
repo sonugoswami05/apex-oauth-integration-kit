@@ -1,0 +1,16 @@
+# Salesforce CLI
+.sf/
+.sfdx/
+.localdevserver/
+
+# Dependencies and test output
+node_modules/
+coverage/
+
+# Logs
+*.log
+
+# OS and editor files
+.DS_Store
+.vscode/settings.json
+.idea/

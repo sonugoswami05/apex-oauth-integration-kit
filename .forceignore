@@ -1,0 +1,11 @@
+# Files that the Salesforce CLI should not push, pull or deploy.
+**/jsconfig.json
+**/.eslintrc.json
+**/__tests__/**
+**/*.md
+package.xml
+.sf
+.sfdx
+.localdevserver
+node_modules
+coverage

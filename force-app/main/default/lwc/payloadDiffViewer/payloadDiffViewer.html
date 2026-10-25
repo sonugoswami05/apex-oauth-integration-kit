@@ -1,0 +1,108 @@
+<template>
+    <lightning-card title="Payload changes" icon-name="standard:document">
+        <div slot="actions" class="actions">
+            <lightning-button-icon
+                icon-name="utility:refresh"
+                alternative-text="Refresh changes"
+                title="Refresh changes"
+                onclick={handleRefresh}
+                disabled={isSubmitting}
+            ></lightning-button-icon>
+            <lightning-button
+                variant="brand"
+                label={regenerateLabel}
+                icon-name="utility:send"
+                onclick={handleRegenerate}
+                disabled={regenerateDisabled}
+            ></lightning-button>
+        </div>
+
+        <div class="slds-var-p-horizontal_medium slds-var-p-bottom_medium">
+            <template lwc:if={isLoading}>
+                <div class="loading" aria-busy="true">
+                    <lightning-spinner alternative-text="Loading payload changes" size="small"></lightning-spinner>
+                </div>
+            </template>
+
+            <template lwc:elseif={error}>
+                <div class="slds-notify slds-notify_alert slds-alert_error" role="alert">
+                    <lightning-icon icon-name="utility:error" size="x-small" variant="inverse" class="slds-var-m-right_x-small"></lightning-icon>
+                    <span>{error}</span>
+                </div>
+            </template>
+
+            <template lwc:else>
+                <p class="summary slds-text-body_regular" role="status" aria-live="polite" aria-atomic="true">{summaryText}</p>
+
+                <template lwc:if={notice}>
+                    <div class={notice.className} role="note">
+                        <div class="slds-media__figure">
+                            <lightning-icon icon-name={notice.iconName} size="x-small" class="notice-icon"></lightning-icon>
+                        </div>
+                        <div class="slds-media__body">
+                            <p>{notice.message}</p>
+                        </div>
+                    </div>
+                </template>
+
+                <template lwc:if={hasChanges}>
+                    <div class="counts" aria-hidden="true">
+                        <lightning-badge label={changedBadgeLabel} icon-name="utility:edit" class="chip chip_changed"></lightning-badge>
+                        <lightning-badge label={addedBadgeLabel} icon-name="utility:add" class="chip chip_added"></lightning-badge>
+                        <lightning-badge label={removedBadgeLabel} icon-name="utility:dash" class="chip chip_removed"></lightning-badge>
+                    </div>
+
+                    <lightning-radio-group
+                        class="filters"
+                        name="changeFilter"
+                        label="Show"
+                        type="button"
+                        options={filterOptions}
+                        value={activeFilter}
+                        onchange={handleFilterChange}
+                    ></lightning-radio-group>
+
+                    <div class="table-wrapper">
+                        <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_fixed-layout" aria-label="Payload changes since the last generation">
+                            <thead>
+                                <tr class="slds-line-height_reset">
+                                    <th scope="col" class="col-kind"><div class="slds-truncate" title="Change">Change</div></th>
+                                    <th scope="col" class="col-path"><div class="slds-truncate" title="Field path">Field path</div></th>
+                                    <th scope="col"><div class="slds-truncate" title="Last generated">Last generated</div></th>
+                                    <th scope="col"><div class="slds-truncate" title="Current">Current</div></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <template for:each={visibleRows} for:item="row">
+                                    <tr key={row.key} class={row.rowClass}>
+                                        <td data-label="Change">
+                                            <lightning-badge label={row.kindLabel} icon-name={row.iconName} class={row.chipClass}></lightning-badge>
+                                        </td>
+                                        <th scope="row" data-label="Field path" class="slds-cell-wrap">
+                                            <code class="path">{row.path}</code>
+                                            <template lwc:if={row.typeNote}>
+                                                <span class="type-note slds-text-color_weak">{row.typeNote}</span>
+                                            </template>
+                                        </th>
+                                        <td data-label="Last generated" class="slds-cell-wrap">
+                                            <code class={row.beforeClass}>{row.beforeText}</code>
+                                        </td>
+                                        <td data-label="Current" class="slds-cell-wrap">
+                                            <code class={row.afterClass}>{row.afterText}</code>
+                                        </td>
+                                    </tr>
+                                </template>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <template lwc:if={diff.truncated}>
+                        <p class="slds-text-body_small slds-text-color_weak slds-var-m-top_small">
+                            Showing the first {shownRowCount} changes. Narrow the payload or add ignored paths to see the rest.
+                        </p>
+                    </template>
+                </template>
+            </template>
+        </div>
+    </lightning-card>
+</template>
